@@ -10,7 +10,19 @@ Los trabajadores de oficina pierden tiempo buscando restaurantes donde almorzar 
 
 ## Solución
 El sistema permite que los restaurantes publiquen su menú del día para que los usuarios lo consulten desde una página web.
+## Capturas de pantalla
 
+### Página principal
+![Página principal](screenshots/01-home.png)
+
+### Resultados
+![Resultados](screenshots/02-results.png)
+
+### Registro de restaurante
+![Registro](screenshots/03-register.png)
+
+### Menú del restaurante
+![Menú](screenshots/04-profile.png)
 ## Funciones principales
 - Registro de usuarios
 - Registro de restaurantes
