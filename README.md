@@ -40,6 +40,13 @@ El sistema permite que los restaurantes publiquen su menú del día para que los
 1. Descargar el repositorio.
 2. Abrir la carpeta del proyecto.
 3. Ejecutar el archivo index.html en el navegador.
+4. ## Cómo correr el proyecto
+
+1. Descarga o clona el repositorio:
+   git clone https://github.com/anamaria17hv/mari777.git
+2. Abre la carpeta del proyecto en tu computador
+3. Haz doble clic en el archivo index.html
+4. Se abrirá automáticamente en tu navegador web
 
 ## Autor
 Anamaria hernadezx vasquez
