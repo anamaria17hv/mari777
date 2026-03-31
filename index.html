@@ -3,26 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <title>Menú del Día</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8f0;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+    }
+
+    h2 {
+      color: #388e3c;
+    }
+
+    button {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px;
+      margin: 5px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #388e3c;
+    }
+
+    input, select {
+      padding: 8px;
+      width: 100%;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border-left: 5px solid #4caf50;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+
 </head>
 <body>
 
 <h1>Menú del Día</h1>
 
 <!-- Navegación -->
-<button onclick="mostrar('busqueda')">Buscar</button>
-<button onclick="mostrar('resultados')">Restaurantes</button>
-<button onclick="mostrar('registro')">Registrar</button>
+<div class="nav">
+  <button onclick="mostrar('busqueda')">Buscar</button>
+  <button onclick="mostrar('resultados')">Restaurantes</button>
+  <button onclick="mostrar('registro')">Registrar</button>
+</div>
 
 <!-- Búsqueda -->
 <div id="busqueda">
   <h2>Buscar</h2>
-  <input type="text" placeholder="Ubicación"><br><br>
+
+  <input type="text" placeholder="Ubicación">
 
   <select>
     <option>Todos</option>
     <option>Comida casera</option>
     <option>Vegetariana</option>
-  </select><br><br>
+  </select>
 
   <button onclick="mostrar('resultados')">Buscar</button>
 </div>
@@ -31,20 +89,21 @@
 <div id="resultados" style="display:none;">
   <h2>Restaurantes</h2>
 
-  <p><strong>La Casita</strong><br>
-  Menú: Arroz con pollo<br>
-  Precio: $12.000</p>
-
-  <button onclick="mostrar('perfil')">Ver menú</button>
+  <div class="card">
+    <p><strong>La Casita</strong></p>
+    <p>Menú: Arroz con pollo</p>
+    <p>Precio: $12.000</p>
+    <button onclick="mostrar('perfil')">Ver menú</button>
+  </div>
 </div>
 
 <!-- Registro -->
 <div id="registro" style="display:none;">
   <h2>Registrar Restaurante</h2>
 
-  <input type="text" placeholder="Nombre"><br><br>
-  <input type="text" placeholder="Dirección"><br><br>
-  <input type="text" placeholder="Precio"><br><br>
+  <input type="text" placeholder="Nombre">
+  <input type="text" placeholder="Dirección">
+  <input type="text" placeholder="Precio">
 
   <button onclick="mostrar('resultados')">Guardar</button>
 </div>
@@ -52,7 +111,10 @@
 <!-- Perfil -->
 <div id="perfil" style="display:none;">
   <h2>La Casita</h2>
-  <p>Arroz con pollo - $12.000</p>
+
+  <div class="card">
+    <p>Arroz con pollo - $12.000</p>
+  </div>
 
   <button onclick="mostrar('resultados')">Volver</button>
 </div>
