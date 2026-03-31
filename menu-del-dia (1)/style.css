@@ -1,0 +1,31 @@
+body {
+  font-family: Arial;
+  background: #f0f8f0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2e7d32;
+}
+
+.nav {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.card {
+  background: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-left: 5px solid #4caf50;
+}

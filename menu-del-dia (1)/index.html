@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Menú del Día</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🍽️ Menú del Día</h1>
+
+<div class="nav">
+  <button onclick="mostrar('registro')">Registrar</button>
+  <button onclick="mostrar('resultados')">Ver Restaurantes</button>
+</div>
+
+<div id="registro">
+  <h2>Registrar Restaurante</h2>
+  <input id="nombre" placeholder="Nombre restaurante">
+  <input id="menu" placeholder="Menú">
+  <input id="precio" placeholder="Precio">
+  <button onclick="guardar()">Guardar</button>
+</div>
+
+<div id="resultados" style="display:none">
+  <h2>Restaurantes</h2>
+  <div id="lista"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
