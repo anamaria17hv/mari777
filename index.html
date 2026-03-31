@@ -2,458 +2,70 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buscador de Menú del Día</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #ff6b00;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0 0 8px 0;
-      font-size: 1.8rem;
-    }
-
-    header p {
-      margin: 0;
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
-
-    nav {
-      background: #cc5500;
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      padding: 8px;
-      flex-wrap: wrap;
-    }
-
-    nav button {
-      background: none;
-      color: white;
-      border: 2px solid rgba(255,255,255,0.4);
-      padding: 8px 18px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      transition: background 0.2s;
-    }
-
-    nav button:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    nav button.active {
-      background: white;
-      color: #cc5500;
-      font-weight: bold;
-      border-color: white;
-    }
-
-    .vista {
-      display: none;
-    }
-
-    .vista.activa {
-      display: block;
-    }
-
-    .container {
-      padding: 20px;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .restaurante {
-      background: white;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    }
-
-    .restaurante h3 {
-      margin: 0 0 8px 0;
-      color: #333;
-    }
-
-    .restaurante p {
-      margin: 4px 0;
-      color: #555;
-    }
-
-    button {
-      background: #ff6b00;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      margin-top: 8px;
-    }
-
-    button:hover {
-      background: #e05a00;
-    }
-
-    .buscador {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-    }
-
-    .buscador input, .buscador select {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 0.95rem;
-      box-sizing: border-box;
-    }
-
-    .filtros {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 10px 0;
-    }
-
-    .filtros label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      color: #555;
-      cursor: pointer;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #333;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 0.95rem;
-      box-sizing: border-box;
-    }
-
-    .form-group textarea {
-      height: 80px;
-      resize: vertical;
-    }
-
-    .perfil-header {
-      background: #ff6b00;
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-    }
-
-    .perfil-header h2 { margin: 0 0 6px 0; }
-    .perfil-header p  { margin: 2px 0; opacity: 0.9; font-size: 0.9rem; }
-
-    .menu-completo {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-      overflow: hidden;
-    }
-
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 16px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .menu-item:last-child { border-bottom: none; }
-    .menu-item-info { flex: 1; }
-    .menu-item-info strong { display: block; color: #333; }
-    .menu-item-info span  { font-size: 0.85rem; color: #777; }
-    .menu-item-precio { font-weight: bold; color: #ff6b00; font-size: 1rem; }
-
-    .seccion-titulo {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #333;
-      margin: 20px 0 10px;
-      border-left: 4px solid #ff6b00;
-      padding-left: 10px;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #ff6b00;
-      color: white;
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-left: 8px;
-    }
-
-    .info-fila {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .info-fila span { font-size: 0.88rem; opacity: 0.95; }
-
-    .btn-volver {
-      background: none;
-      color: #ff6b00;
-      border: 2px solid #ff6b00;
-      margin-bottom: 16px;
-    }
-
-    .btn-volver:hover {
-      background: #ff6b00;
-      color: white;
-    }
-  </style>
+  <title>Menú del Día</title>
 </head>
 <body>
 
-<header>
-  <h1>Buscador de Menú del Día</h1>
-  <p>Encuentra restaurantes con el menú del día cerca de ti</p>
-</header>
+<h1>Menú del Día</h1>
 
-<nav>
-  <button class="active" onclick="mostrarVista('busqueda', this)">🔍 Buscar</button>
-  <button onclick="mostrarVista('resultados', this)">🏪 Restaurantes</button>
-  <button onclick="mostrarVista('registro', this)">➕ Registrar Restaurante</button>
-  <button onclick="mostrarVista('perfil', this)">🍽 Ver Menú</button>
-</nav>
+<!-- Navegación -->
+<button onclick="mostrar('busqueda')">Buscar</button>
+<button onclick="mostrar('resultados')">Restaurantes</button>
+<button onclick="mostrar('registro')">Registrar</button>
 
-<!-- VISTA 1 - BÚSQUEDA -->
-<div id="busqueda" class="vista activa">
-  <div class="container">
-    <h2>Buscar restaurantes</h2>
-    <div class="buscador">
-      <label><strong>¿Dónde estás?</strong></label>
-      <input type="text" placeholder="Escribe tu dirección o barrio..." />
+<!-- Búsqueda -->
+<div id="busqueda">
+  <h2>Buscar</h2>
+  <input type="text" placeholder="Ubicación"><br><br>
 
-      <label><strong>Tipo de comida</strong></label>
-      <select>
-        <option value="">Todos</option>
-        <option>Comida casera</option>
-        <option>Vegetariana</option>
-        <option>Italiana</option>
-        <option>Mariscos</option>
-        <option>Desayunos</option>
-      </select>
+  <select>
+    <option>Todos</option>
+    <option>Comida casera</option>
+    <option>Vegetariana</option>
+  </select><br><br>
 
-      <label><strong>Filtrar por precio</strong></label>
-      <div class="filtros">
-        <label><input type="checkbox"> Menos de $10.000</label>
-        <label><input type="checkbox"> Menos de $15.000</label>
-        <label><input type="checkbox"> Menos de $20.000</label>
-        <label><input type="checkbox"> Almuerzo ejecutivo</label>
-        <label><input type="checkbox"> Vegetariano</label>
-      </div>
-
-      <button onclick="mostrarVista('resultados', document.querySelectorAll('nav button')[1])">
-        Buscar restaurantes
-      </button>
-    </div>
-  </div>
+  <button onclick="mostrar('resultados')">Buscar</button>
 </div>
 
-<!-- VISTA 2 - RESULTADOS -->
-<div id="resultados" class="vista">
-  <div class="container">
-    <h2>Restaurantes disponibles</h2>
+<!-- Resultados -->
+<div id="resultados" style="display:none;">
+  <h2>Restaurantes</h2>
 
-    <div class="restaurante">
-      <h3>Restaurante La Casita <span class="badge">Abierto</span></h3>
-      <p>📍 Calle 45 #12-30, Chapinero &nbsp;·&nbsp; ⭐ 4.8 &nbsp;·&nbsp; ⏱ 10 min</p>
-      <p><strong>Menú:</strong> Arroz, pollo, ensalada y jugo</p>
-      <p><strong>Precio:</strong> $12.000</p>
-      <button onclick="mostrarVista('perfil', document.querySelectorAll('nav button')[3])">Ver menú</button>
-    </div>
+  <p><strong>La Casita</strong><br>
+  Menú: Arroz con pollo<br>
+  Precio: $12.000</p>
 
-    <div class="restaurante">
-      <h3>Restaurante El Buen Sabor <span class="badge">Abierto</span></h3>
-      <p>📍 Carrera 7 #72-41, Chapinero &nbsp;·&nbsp; ⭐ 4.6 &nbsp;·&nbsp; ⏱ 15 min</p>
-      <p><strong>Menú:</strong> Sopa, carne asada, arroz y jugo</p>
-      <p><strong>Precio:</strong> $13.000</p>
-      <button onclick="mostrarVista('perfil', document.querySelectorAll('nav button')[3])">Ver menú</button>
-    </div>
-
-    <div class="restaurante">
-      <h3>Desayunos El Madrugador <span class="badge">Abierto</span></h3>
-      <p>📍 Calle 72 #10-34, Chapinero &nbsp;·&nbsp; ⭐ 4.5 &nbsp;·&nbsp; ⏱ 8 min</p>
-      <p><strong>Menú:</strong> Huevos, arepa, chocolate</p>
-      <p><strong>Precio:</strong> $7.000</p>
-      <button onclick="mostrarVista('perfil', document.querySelectorAll('nav button')[3])">Ver menú</button>
-    </div>
-  </div>
+  <button onclick="mostrar('perfil')">Ver menú</button>
 </div>
 
-<!-- VISTA 3 - REGISTRO -->
-<div id="registro" class="vista">
-  <div class="container">
-    <h2>Registrar Restaurante</h2>
-    <p style="color:#555; margin-bottom:20px;">Completa el formulario para publicar tu restaurante y el menú del día.</p>
+<!-- Registro -->
+<div id="registro" style="display:none;">
+  <h2>Registrar Restaurante</h2>
 
-    <div class="form-group">
-      <label>Nombre del restaurante</label>
-      <input type="text" placeholder="Ej. La Casita" />
-    </div>
-    <div class="form-group">
-      <label>Dirección</label>
-      <input type="text" placeholder="Calle 72 #10-34, Chapinero, Bogotá" />
-    </div>
-    <div class="form-group">
-      <label>Teléfono</label>
-      <input type="tel" placeholder="+57 300 000 0000" />
-    </div>
-    <div class="form-group">
-      <label>Correo electrónico</label>
-      <input type="email" placeholder="restaurante@correo.com" />
-    </div>
-    <div class="form-group">
-      <label>Tipo de cocina</label>
-      <select>
-        <option value="">Selecciona...</option>
-        <option>Comida casera colombiana</option>
-        <option>Vegetariana / Vegana</option>
-        <option>Italiana</option>
-        <option>Mariscos</option>
-        <option>Desayunos</option>
-        <option>Otro</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Horario de atención</label>
-      <input type="text" placeholder="Ej. Lunes a viernes 11:00am – 3:00pm" />
-    </div>
+  <input type="text" placeholder="Nombre"><br><br>
+  <input type="text" placeholder="Dirección"><br><br>
+  <input type="text" placeholder="Precio"><br><br>
 
-    <div class="seccion-titulo">Menú del día</div>
-
-    <div class="form-group">
-      <label>Plato principal</label>
-      <input type="text" placeholder="Ej. Bandeja paisa" />
-    </div>
-    <div class="form-group">
-      <label>Precio del menú</label>
-      <input type="text" placeholder="Ej. $12.000" />
-    </div>
-    <div class="form-group">
-      <label>Descripción del menú</label>
-      <textarea placeholder="Ej. Incluye sopa, plato fuerte, jugo y postre..."></textarea>
-    </div>
-
-    <button onclick="mostrarVista('resultados', document.querySelectorAll('nav button')[1])">
-      Publicar restaurante
-    </button>
-  </div>
+  <button onclick="mostrar('resultados')">Guardar</button>
 </div>
 
-<!-- VISTA 4 - PERFIL / MENÚ -->
-<div id="perfil" class="vista">
-  <div class="container">
+<!-- Perfil -->
+<div id="perfil" style="display:none;">
+  <h2>La Casita</h2>
+  <p>Arroz con pollo - $12.000</p>
 
-    <button class="btn-volver"
-      onclick="mostrarVista('resultados', document.querySelectorAll('nav button')[1])">
-      ← Volver a resultados
-    </button>
-
-    <div class="perfil-header">
-      <h2>Restaurante La Casita</h2>
-      <div class="info-fila">
-        <span>📍 Calle 45 #12-30, Chapinero</span>
-        <span>⏰ 11:00am – 3:00pm</span>
-        <span>📞 +57 310 555 0011</span>
-        <span>⭐ 4.8 · 214 reseñas</span>
-      </div>
-    </div>
-
-    <div class="seccion-titulo">Menú del día – Lunes 17 de marzo de 2026</div>
-
-    <div class="menu-completo">
-      <div class="menu-item">
-        <div class="menu-item-info">
-          <strong>Sopa del día</strong>
-          <span>Ajiaco bogotano con crema y alcaparras</span>
-        </div>
-        <div class="menu-item-precio">Incluida</div>
-      </div>
-      <div class="menu-item">
-        <div class="menu-item-info">
-          <strong>Arroz con pollo</strong>
-          <span>Con ensalada fresca y patacón</span>
-        </div>
-        <div class="menu-item-precio">$12.000</div>
-      </div>
-      <div class="menu-item">
-        <div class="menu-item-info">
-          <strong>Carne asada</strong>
-          <span>Con papas criollas y ensalada</span>
-        </div>
-        <div class="menu-item-precio">$13.500</div>
-      </div>
-      <div class="menu-item">
-        <div class="menu-item-info">
-          <strong>Jugo natural</strong>
-          <span>Lulo, mora o maracuyá</span>
-        </div>
-        <div class="menu-item-precio">Incluido</div>
-      </div>
-      <div class="menu-item">
-        <div class="menu-item-info">
-          <strong>Postre del día</strong>
-          <span>Arroz con leche</span>
-        </div>
-        <div class="menu-item-precio">Incluido</div>
-      </div>
-    </div>
-
-    <button style="width:100%; margin-top:20px; padding:14px; font-size:1rem;">
-      🍽 Ir al restaurante · Desde $12.000
-    </button>
-
-  </div>
+  <button onclick="mostrar('resultados')">Volver</button>
 </div>
 
 <script>
-  function mostrarVista(id, boton) {
-    document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('activa');
-    if (boton) boton.classList.add('active');
-  }
+function mostrar(vista) {
+  document.getElementById("busqueda").style.display = "none";
+  document.getElementById("resultados").style.display = "none";
+  document.getElementById("registro").style.display = "none";
+  document.getElementById("perfil").style.display = "none";
+
+  document.getElementById(vista).style.display = "block";
+}
 </script>
 
 </body>
