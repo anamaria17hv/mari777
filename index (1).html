@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú del Día</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --naranja: #FF5722;
+      --naranja-h: #FF7043;
+      --naranja-s: #FFF3EF;
+      --crema: #FDF8F4;
+      --negro: #1A1208;
+      --gris: #6B6560;
+      --gris-c: #F2EDE8;
+      --blanco: #FFFFFF;
+      --verde: #2E7D32;
+      --verde-s: #E8F5E9;
+      --rojo: #C62828;
+      --rojo-s: #FFEBEE;
+      --radio: 14px;
+      --som: 0 2px 16px rgba(26,18,8,0.08);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--negro); min-height: 100vh; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--blanco); border-bottom: 1px solid var(--gris-c); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 58px; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--naranja); }
+    .nav-tabs { display: flex; gap: 2px; }
+    .nav-tab { background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 500; color: var(--gris); padding: 7px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .nav-tab:hover { background: var(--gris-c); color: var(--negro); }
+    .nav-tab.active { background: var(--naranja-s); color: var(--naranja); font-weight: 600; }
+
+    /* VISTAS */
+    .vista { display: none; }
+    .vista.activa { display: block; }
+
+    /* HERO */
+    .hero { background: var(--negro); padding: 52px 24px 44px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 0%,#FF572228 0%,transparent 60%), radial-gradient(ellipse at 20% 100%,#FF704318 0%,transparent 55%); }
+    .hero-tag { display: inline-block; background: var(--naranja); color: #fff; font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 18px; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem,4.5vw,2.9rem); font-weight: 800; color: #fff; line-height: 1.12; margin-bottom: 12px; position: relative; }
+    .hero h1 em { font-style: normal; color: var(--naranja); }
+    .hero p { color: #9E9790; font-size: 0.92rem; margin-bottom: 32px; position: relative; }
+
+    /* BUSCADOR */
+    .search-card { background: var(--blanco); border-radius: 18px; padding: 18px; max-width: 540px; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.22); position: relative; }
+    .search-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .s-wrap { flex: 1; position: relative; }
+    .s-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.95rem; }
+    .s-input { width: 100%; padding: 12px 12px 12px 36px; border: 1.5px solid var(--gris-c); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--negro); background: var(--crema); outline: none; transition: border-color .2s; }
+    .s-input:focus { border-color: var(--naranja); }
+    .s-select { padding: 12px; border: 1.5px solid var(--gris-c); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--negro); background: var(--crema); outline: none; cursor: pointer; }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+    .chip { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border: 1.5px solid var(--gris-c); border-radius: 100px; font-size: 0.78rem; color: var(--gris); cursor: pointer; transition: all .2s; user-select: none; }
+    .chip input { display: none; }
+    .chip:has(input:checked) { border-color: var(--naranja); background: var(--naranja-s); color: var(--naranja); }
+    .btn-primary { background: var(--naranja); color: #fff; border: none; padding: 13px 20px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background .2s, transform .1s; }
+    .btn-primary:hover { background: var(--naranja-h); transform: translateY(-1px); }
+    .btn-primary.full { width: 100%; }
+
+    /* PÁGINA */
+    .page { padding: 28px 24px 60px; max-width: 900px; margin: 0 auto; }
+    .page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .page-head h2 { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .badge-cnt { background: var(--naranja); color: #fff; font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 100px; }
+
+    /* CARDS */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(270px,1fr)); gap: 14px; }
+    .card { background: var(--blanco); border-radius: var(--radio); overflow: hidden; box-shadow: var(--som); transition: transform .2s, box-shadow .2s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,18,8,0.12); }
+    .card-img { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; position: relative; }
+    .card-open { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.92); color: var(--verde); font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 100px; }
+    .card-body { padding: 14px; }
+    .card-body h3 { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 5px; }
+    .card-meta { font-size: 0.76rem; color: var(--gris); margin-bottom: 9px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .card-plato { font-size: 0.82rem; color: var(--negro); margin-bottom: 12px; padding: 9px; background: var(--crema); border-radius: 8px; border-left: 3px solid var(--naranja); }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .precio { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--naranja); }
+    .btn-row { display: flex; gap: 6px; }
+    .btn-sm { padding: 7px 12px; border-radius: 8px; font-size: 0.76rem; font-weight: 600; border: none; cursor: pointer; transition: background .2s; }
+    .btn-ver { background: var(--naranja); color: #fff; }
+    .btn-ver:hover { background: var(--naranja-h); }
+    .btn-editar { background: var(--gris-c); color: var(--negro); }
+    .btn-editar:hover { background: #e0dbd5; }
+    .btn-eliminar { background: var(--rojo-s); color: var(--rojo); }
+    .btn-eliminar:hover { background: #ffcdd2; }
+    .empty { text-align: center; padding: 48px 20px; color: var(--gris); font-size: 0.9rem; grid-column: 1/-1; }
+    .empty span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+
+    /* FORMULARIO */
+    .form-wrap { background: var(--blanco); border-radius: var(--radio); box-shadow: var(--som); padding: 28px; max-width: 600px; }
+    .sec-label { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--naranja); margin: 22px 0 12px; display: flex; align-items: center; gap: 8px; }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--gris-c); }
+    .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fgrid .span2 { grid-column: 1/-1; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--gris); margin-bottom: 5px; }
+    .field input, .field select, .field textarea { width: 100%; padding: 11px 13px; border: 1.5px solid var(--gris-c); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--negro); background: var(--crema); outline: none; transition: border-color .2s; }
+    .field textarea { height: 80px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--naranja); }
+    .btn-actions { display: flex; gap: 10px; margin-top: 22px; }
+    .btn-cancel { background: var(--gris-c); color: var(--negro); border: none; padding: 12px 22px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+    .btn-cancel:hover { background: #e0dbd5; }
+
+    /* PERFIL */
+    .perfil-hero { background: var(--negro); padding: 28px 24px; position: relative; overflow: hidden; }
+    .perfil-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 50%,#FF572222 0%,transparent 55%); }
+    .btn-back { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: none; padding: 7px 14px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; margin-bottom: 16px; transition: background .2s; }
+    .btn-back:hover { background: rgba(255,255,255,0.18); }
+    .perfil-nombre { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; color: #fff; margin-bottom: 10px; position: relative; }
+    .perfil-info { display: flex; gap: 16px; flex-wrap: wrap; position: relative; }
+    .perfil-info span { font-size: 0.8rem; color: #9E9790; }
+    .perfil-body { max-width: 640px; margin: 0 auto; padding: 24px 24px 56px; }
+    .menu-titulo { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gris); margin-bottom: 14px; }
+    .menu-lista { background: var(--blanco); border-radius: var(--radio); overflow: hidden; box-shadow: var(--som); }
+    .menu-fila { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--gris-c); gap: 10px; }
+    .menu-fila:last-child { border-bottom: none; }
+    .mf-info strong { display: block; font-size: 0.9rem; margin-bottom: 2px; }
+    .mf-info span { font-size: 0.78rem; color: var(--gris); }
+    .mf-precio { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--naranja); white-space: nowrap; font-size: 0.95rem; }
+    .mf-precio.gratis { font-size: 0.76rem; color: var(--verde); background: var(--verde-s); padding: 3px 9px; border-radius: 100px; font-weight: 600; }
+    .btn-ir { width: 100%; margin-top: 18px; padding: 15px; background: var(--naranja); color: #fff; border: none; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-ir:hover { background: var(--naranja-h); }
+
+    /* TOAST */
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--negro); color: #fff; padding: 12px 22px; border-radius: 100px; font-size: 0.85rem; font-weight: 500; z-index: 999; transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s; opacity: 0; pointer-events: none; white-space: nowrap; }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* MODAL */
+    .overlay { position: fixed; inset: 0; background: rgba(26,18,8,0.55); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .overlay.show { opacity: 1; pointer-events: all; }
+    .modal { background: var(--blanco); border-radius: 18px; padding: 28px; max-width: 380px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
+    .modal h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .modal p { font-size: 0.88rem; color: var(--gris); margin-bottom: 22px; }
+    .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-danger { background: var(--rojo); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🍽 Menú del Día</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="ir('busqueda',this)">Buscar</button>
+    <button class="nav-tab" onclick="ir('resultados',this)">Restaurantes</button>
+    <button class="nav-tab" onclick="abrirFormNuevo()">+ Registrar</button>
+    <button class="nav-tab" id="tab-perfil" style="display:none" onclick="ir('perfil',this)">Ver menú</button>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL ELIMINAR -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>¿Eliminar restaurante?</h3>
+    <p>Esta acción no se puede deshacer. Se eliminará el restaurante y su menú.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn-danger" id="btn-confirmar">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VISTA 1: BÚSQUEDA ═══ -->
+<div id="busqueda" class="vista activa">
+  <div class="hero">
+    <div class="hero-tag">Bogotá · Hoy</div>
+    <h1>Encuentra tu <em>menú del día</em><br>sin perder tiempo</h1>
+    <p>Compara precios, platos y distancias antes de salir de la oficina.</p>
+    <div class="search-card">
+      <div class="search-row">
+        <div class="s-wrap">
+          <span class="s-icon">📍</span>
+          <input class="s-input" id="filtro-barrio" type="text" placeholder="Tu dirección o barrio...">
+        </div>
+        <select class="s-select" id="filtro-tipo">
+          <option value="">Tipo</option>
+          <option>Comida casera colombiana</option>
+          <option>Vegetariana / Vegana</option>
+          <option>Italiana</option>
+          <option>Mariscos</option>
+          <option>Desayunos</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="f10"> &lt;$10.000</label>
+        <label class="chip"><input type="checkbox" id="f15"> &lt;$15.000</label>
+        <label class="chip"><input type="checkbox" id="f20"> &lt;$20.000</label>
+        <label class="chip"><input type="checkbox" id="fveg"> Vegetariano</label>
+      </div>
+      <button class="btn-primary full" onclick="buscar()">Buscar restaurantes →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VISTA 2: RESULTADOS ═══ -->
+<div id="resultados" class="vista">
+  <div class="page">
+    <div class="page-head">
+      <h2>Restaurantes <span class="badge-cnt" id="cnt">0</span></h2>
+      <button class="btn-primary" onclick="abrirFormNuevo()">+ Nuevo restaurante</button>
+    </div>
+    <div class="grid" id="lista"></div>
+  </div>
+</div>
+
+<!-- ═══ VISTA 3: FORMULARIO (crear / editar) ═══ -->
+<div id="registro" class="vista">
+  <div class="page">
+    <div class="page-head">
+      <h2 id="form-titulo">Registrar restaurante</h2>
+    </div>
+    <div class="form-wrap">
+      <input type="hidden" id="r-id">
+
+      <div class="sec-label">Datos del restaurante</div>
+      <div class="fgrid">
+        <div class="field span2">
+          <label>Nombre del restaurante *</label>
+          <input type="text" id="r-nombre" placeholder="Ej. La Casita">
+        </div>
+        <div class="field span2">
+          <label>Dirección *</label>
+          <input type="text" id="r-direccion" placeholder="Calle 72 #10-34, Chapinero, Bogotá">
+        </div>
+        <div class="field">
+          <label>Teléfono</label>
+          <input type="tel" id="r-telefono" placeholder="+57 300 000 0000">
+        </div>
+        <div class="field">
+          <label>Correo electrónico</label>
+          <input type="email" id="r-email" placeholder="restaurante@correo.com">
+        </div>
+        <div class="field">
+          <label>Tipo de cocina</label>
+          <select id="r-tipo">
+            <option value="">Selecciona...</option>
+            <option>Comida casera colombiana</option>
+            <option>Vegetariana / Vegana</option>
+            <option>Italiana</option>
+            <option>Mariscos</option>
+            <option>Desayunos</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Horario de atención</label>
+          <input type="text" id="r-horario" placeholder="Lun–Vie 11am – 3pm">
+        </div>
+      </div>
+
+      <div class="sec-label">Menú del día</div>
+      <div class="fgrid">
+        <div class="field">
+          <label>Plato principal *</label>
+          <input type="text" id="r-plato" placeholder="Ej. Bandeja paisa">
+        </div>
+        <div class="field">
+          <label>Precio en pesos *</label>
+          <input type="number" id="r-precio" placeholder="12000" min="0">
+        </div>
+        <div class="field span2">
+          <label>Descripción completa del menú</label>
+          <textarea id="r-desc" placeholder="Incluye sopa del día, jugo natural, postre..."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-actions">
+        <button class="btn-cancel" onclick="ir('resultados', document.querySelectorAll('.nav-tab')[1])">Cancelar</button>
+        <button class="btn-primary" onclick="guardar()">Guardar restaurante</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VISTA 4: PERFIL ═══ -->
+<div id="perfil" class="vista">
+  <div class="perfil-hero">
+    <button class="btn-back" onclick="ir('resultados', document.querySelectorAll('.nav-tab')[1])">← Volver</button>
+    <div class="perfil-nombre" id="p-nombre"></div>
+    <div class="perfil-info" id="p-info"></div>
+  </div>
+  <div class="perfil-body">
+    <div class="menu-titulo">Menú del día — Hoy</div>
+    <div class="menu-lista" id="p-menu"></div>
+    <button class="btn-ir" id="p-btn"></button>
+  </div>
+</div>
+
+<script>
+/* ══ STORAGE ══ */
+const CLAVE = 'menudia_v1';
+function db() {
+  try { return JSON.parse(localStorage.getItem(CLAVE)) || []; }
+  catch { return []; }
+}
+function save(d) { localStorage.setItem(CLAVE, JSON.stringify(d)); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+/* ══ DATOS INICIALES ══ */
+if (!localStorage.getItem(CLAVE)) {
+  save([
+    { id:uid(), nombre:'La Casita', direccion:'Calle 45 #12-30, Chapinero', telefono:'+57 310 555 0011', email:'', tipo:'Comida casera colombiana', horario:'Lun–Vie 11am–3pm', plato:'Arroz con pollo', precio:12000, desc:'Incluye sopa del día (ajiaco), arroz con pollo, ensalada fresca y jugo natural.' },
+    { id:uid(), nombre:'El Buen Sabor', direccion:'Carrera 7 #72-41, Chapinero', telefono:'', email:'', tipo:'Comida casera colombiana', horario:'Lun–Sáb 11am–3pm', plato:'Carne asada', precio:13000, desc:'Sopa, carne asada, arroz, ensalada y jugo.' },
+    { id:uid(), nombre:'El Madrugador', direccion:'Calle 72 #10-34, Chapinero', telefono:'', email:'', tipo:'Desayunos', horario:'Lun–Dom 7am–11am', plato:'Desayuno completo', precio:7000, desc:'Huevos al gusto, arepa, chocolate caliente y pan.' }
+  ]);
+}
+
+/* ══ NAVEGACIÓN ══ */
+function ir(id, btn) {
+  document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('activa');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'resultados') renderLista(db());
+}
+
+/* ══ RENDER ══ */
+const EMOJI = {'Comida casera colombiana':'🍲','Vegetariana / Vegana':'🥗','Italiana':'🍝','Mariscos':'🦐','Desayunos':'☕','Otro':'🍽'};
+const COLOR = {'Comida casera colombiana':'linear-gradient(135deg,#FF5722,#FF8F00)','Vegetariana / Vegana':'linear-gradient(135deg,#43A047,#1B5E20)','Italiana':'linear-gradient(135deg,#E53935,#B71C1C)','Mariscos':'linear-gradient(135deg,#1565C0,#0D47A1)','Desayunos':'linear-gradient(135deg,#F57F17,#E65100)','Otro':'linear-gradient(135deg,#6D4C41,#3E2723)'};
+const pesos = n => '$' + Number(n).toLocaleString('es-CO');
+
+function renderLista(data) {
+  document.getElementById('cnt').textContent = data.length;
+  const lista = document.getElementById('lista');
+  if (!data.length) {
+    lista.innerHTML = '<div class="empty"><span>🍽</span>No hay restaurantes.<br>¡Registra el primero!</div>';
+    return;
+  }
+  lista.innerHTML = data.map(r => `
+    <div class="card">
+      <div class="card-img" style="background:${COLOR[r.tipo]||COLOR['Otro']}">
+        ${EMOJI[r.tipo]||'🍽'}
+        <span class="card-open">● Abierto</span>
+      </div>
+      <div class="card-body">
+        <h3>${r.nombre}</h3>
+        <div class="card-meta">
+          <span>📍 ${r.direccion}</span>
+          ${r.horario?`<span>⏰ ${r.horario}</span>`:''}
+        </div>
+        <div class="card-plato">${r.plato}</div>
+        <div class="card-footer">
+          <span class="precio">${pesos(r.precio)}</span>
+          <div class="btn-row">
+            <button class="btn-sm btn-ver" onclick="verPerfil('${r.id}')">Ver menú</button>
+            <button class="btn-sm btn-editar" onclick="editar('${r.id}')">✏️ Editar</button>
+            <button class="btn-sm btn-eliminar" onclick="pedirEliminar('${r.id}')">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ══ BÚSQUEDA / FILTROS ══ */
+function buscar() {
+  const barrio = document.getElementById('filtro-barrio').value.toLowerCase();
+  const tipo   = document.getElementById('filtro-tipo').value;
+  const f10    = document.getElementById('f10').checked;
+  const f15    = document.getElementById('f15').checked;
+  const f20    = document.getElementById('f20').checked;
+  const fveg   = document.getElementById('fveg').checked;
+
+  let data = db();
+  if (barrio) data = data.filter(r => r.nombre.toLowerCase().includes(barrio) || r.direccion.toLowerCase().includes(barrio));
+  if (tipo)   data = data.filter(r => r.tipo === tipo);
+  if (fveg)   data = data.filter(r => r.tipo === 'Vegetariana / Vegana');
+  if (f10)       data = data.filter(r => r.precio < 10000);
+  else if (f15)  data = data.filter(r => r.precio < 15000);
+  else if (f20)  data = data.filter(r => r.precio < 20000);
+
+  ir('resultados', document.querySelectorAll('.nav-tab')[1]);
+  renderLista(data);
+}
+
+/* ══ CRUD: CREAR ══ */
+function abrirFormNuevo() {
+  limpiarForm();
+  document.getElementById('form-titulo').textContent = 'Registrar restaurante';
+  ir('registro', document.querySelectorAll('.nav-tab')[2]);
+}
+
+function limpiarForm() {
+  ['r-id','r-nombre','r-direccion','r-telefono','r-email','r-horario','r-plato','r-precio','r-desc']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('r-tipo').value = '';
+}
+
+/* ══ CRUD: LEER / EDITAR ══ */
+function editar(id) {
+  const r = db().find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('form-titulo').textContent = 'Editar restaurante';
+  document.getElementById('r-id').value        = r.id;
+  document.getElementById('r-nombre').value    = r.nombre;
+  document.getElementById('r-direccion').value = r.direccion;
+  document.getElementById('r-telefono').value  = r.telefono;
+  document.getElementById('r-email').value     = r.email;
+  document.getElementById('r-tipo').value      = r.tipo;
+  document.getElementById('r-horario').value   = r.horario;
+  document.getElementById('r-plato').value     = r.plato;
+  document.getElementById('r-precio').value    = r.precio;
+  document.getElementById('r-desc').value      = r.desc;
+  ir('registro', document.querySelectorAll('.nav-tab')[2]);
+}
+
+/* ══ CRUD: GUARDAR (create + update) ══ */
+function guardar() {
+  const nombre    = document.getElementById('r-nombre').value.trim();
+  const direccion = document.getElementById('r-direccion').value.trim();
+  const plato     = document.getElementById('r-plato').value.trim();
+  const precio    = parseFloat(document.getElementById('r-precio').value);
+
+  if (!nombre)        { toast('❌ El nombre es obligatorio'); return; }
+  if (!direccion)     { toast('❌ La dirección es obligatoria'); return; }
+  if (!plato)         { toast('❌ El plato principal es obligatorio'); return; }
+  if (!precio||precio<=0) { toast('❌ Ingresa un precio válido'); return; }
+
+  const id   = document.getElementById('r-id').value;
+  const data = db();
+  const obj  = {
+    id: id || uid(),
+    nombre, direccion,
+    telefono: document.getElementById('r-telefono').value.trim(),
+    email:    document.getElementById('r-email').value.trim(),
+    tipo:     document.getElementById('r-tipo').value,
+    horario:  document.getElementById('r-horario').value.trim(),
+    plato, precio,
+    desc:     document.getElementById('r-desc').value.trim()
+  };
+
+  if (id) {
+    const i = data.findIndex(x => x.id === id);
+    if (i !== -1) data[i] = obj;
+    toast('✓ Restaurante actualizado');
+  } else {
+    data.push(obj);
+    toast('✓ Restaurante registrado');
+  }
+
+  save(data);
+  ir('resultados', document.querySelectorAll('.nav-tab')[1]);
+}
+
+/* ══ CRUD: ELIMINAR ══ */
+let _delId = null;
+function pedirEliminar(id) {
+  _delId = id;
+  document.getElementById('overlay').classList.add('show');
+}
+function cerrarModal() {
+  _delId = null;
+  document.getElementById('overlay').classList.remove('show');
+}
+document.getElementById('btn-confirmar').onclick = () => {
+  if (!_delId) return;
+  const data = db().filter(x => x.id !== _delId);
+  save(data);
+  cerrarModal();
+  renderLista(data);
+  toast('✓ Restaurante eliminado');
+};
+document.getElementById('overlay').onclick = e => { if (e.target.id === 'overlay') cerrarModal(); };
+
+/* ══ VER PERFIL ══ */
+function verPerfil(id) {
+  const r = db().find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('p-nombre').textContent = r.nombre;
+  document.getElementById('p-info').innerHTML = [
+    r.direccion ? `<span>📍 ${r.direccion}</span>` : '',
+    r.horario   ? `<span>⏰ ${r.horario}</span>` : '',
+    r.telefono  ? `<span>📞 ${r.telefono}</span>` : '',
+    r.tipo      ? `<span>🍽 ${r.tipo}</span>` : ''
+  ].join('');
+
+  document.getElementById('p-menu').innerHTML = `
+    ${r.desc ? `<div class="menu-fila"><div class="mf-info"><strong>${r.plato}</strong><span>${r.desc}</span></div><span class="mf-precio">${pesos(r.precio)}</span></div>` :
+    `<div class="menu-fila"><div class="mf-info"><strong>${r.plato}</strong><span>Plato principal</span></div><span class="mf-precio">${pesos(r.precio)}</span></div>`}
+    <div class="menu-fila"><div class="mf-info"><strong>Sopa del día</strong><span>Incluida en el menú</span></div><span class="mf-precio gratis">Incluida</span></div>
+    <div class="menu-fila"><div class="mf-info"><strong>Jugo natural</strong><span>Lulo, mora o maracuyá</span></div><span class="mf-precio gratis">Incluido</span></div>
+    <div class="menu-fila"><div class="mf-info"><strong>Postre del día</strong><span>Pregunta en el restaurante</span></div><span class="mf-precio gratis">Incluido</span></div>
+  `;
+  document.getElementById('p-btn').textContent = `🍽 Ir al restaurante · Desde ${pesos(r.precio)}`;
+
+  const t = document.getElementById('tab-perfil');
+  t.style.display = 'inline-block';
+  ir('perfil', t);
+}
+
+/* ══ TOAST ══ */
+let _tt;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* Arranque */
+renderLista(db());
+</script>
+</body>
+</html>
